@@ -20,7 +20,7 @@ import {
   Home,
   Bot
 } from "lucide-react";
-import parlamentLogo from "figma:asset/c998fc552b7b40f39fda694ac3c0aad18cb7b674.png";
+import parlamentLogo from "../assets/c998fc552b7b40f39fda694ac3c0aad18cb7b674.png";
 
 interface DashboardPageProps {
   currentUser: any;
@@ -55,9 +55,10 @@ export function DashboardPage({
   };
 
   return (
-    <div className="bg-background">
+    <div className="bg-background min-h-full pb-8">
+      <div className="max-w-7xl mx-auto w-full">
         {/* Header with Gradient */}
-        <div className="bg-gradient-to-r from-blue-500 to-teal-400 dark:from-[#2c3e50] dark:to-[#1a1a1a] px-6 pt-12 pb-6">
+        <div className="bg-gradient-to-r from-blue-500 to-teal-400 dark:from-[#2c3e50] dark:to-[#1a1a1a] px-6 md:px-10 pt-12 md:pt-16 pb-8 md:rounded-b-3xl shadow-sm mb-6">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center">
               <img src={parlamentLogo} alt="Parlament AI" className="h-10 object-contain" />
@@ -98,7 +99,7 @@ export function DashboardPage({
           <Card className="bg-card rounded-3xl shadow-sm">
             <CardContent className="p-6">
               <h3 className="font-semibold text-foreground mb-4">Tezkor amallar</h3>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
                 <div 
                   className="flex flex-col items-center cursor-pointer p-4 rounded-2xl hover:bg-secondary transition-colors"
                   onClick={() => onNavigate("services")}
@@ -174,7 +175,7 @@ export function DashboardPage({
             </Button>
           </div>
 
-          <div className="space-y-4 pb-6">
+          <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 pb-6">
             <Card className="bg-card rounded-3xl shadow-sm">
               <CardContent className="p-4">
                 <div className="flex items-start space-x-4">
@@ -297,6 +298,7 @@ export function DashboardPage({
             </Card>
           </div>
         </div>
+      </div>
     </div>
   );
 }

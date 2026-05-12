@@ -116,7 +116,7 @@ export function ChatbotPage({ onBack, onNavigate }: ChatbotPageProps) {
   };
 
   return (
-    <div className="bg-gray-50 dark:bg-black h-full flex flex-col">
+    <div className="bg-gray-50 dark:bg-black min-h-screen flex flex-col">
       {/* Header with Gradient */}
       <div className="bg-gradient-to-r from-blue-500 to-teal-400 dark:from-[#2c3e50] dark:to-[#1a1a1a] px-6 pt-12 pb-4">
         <div className="flex items-center justify-between mb-4">

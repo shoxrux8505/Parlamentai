@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast } from "sonner@2.0.3";
+import { toast } from "sonner";
 import { LanguageProvider } from "./components/LanguageContext";
 import { OnboardingScreen } from "./components/OnboardingScreen";
 import { LoginScreen } from "./components/LoginScreen";
@@ -123,21 +123,21 @@ export default function App() {
   };
 
   const handleAddToFavorites = (service: any) => {
-    if (!favoriteServices.find(s => s.id === service.id)) {
+    if (!favoriteServices.find((s: any) => s.id === service.id)) {
       setFavoriteServices([...favoriteServices, service]);
       toast.success(`${service.name} added to favorites!`);
     }
   };
 
   const handleRemoveFromFavorites = (serviceId: number) => {
-    setFavoriteServices(favoriteServices.filter(s => s.id !== serviceId));
+    setFavoriteServices(favoriteServices.filter((s: any) => s.id !== serviceId));
     toast.success("Removed from favorites!");
   };
 
   // Render current view
   const renderCurrentView = () => {
-    // Pages that don't need the bottom navigation (onboarding, login, register, forgot-password, service booking, edit profile, success)
-    const pagesWithoutNav = ["onboarding", "login", "register", "forgot-password", "service-booking", "edit-profile", "success"];
+    // Pages that don't need the bottom navigation (onboarding, login, register, forgot-password, service booking, edit profile, success, chatbot)
+    const pagesWithoutNav = ["onboarding", "login", "register", "forgot-password", "service-booking", "edit-profile", "success", "chatbot"];
     
     const pageContent = () => {
       switch (viewMode) {
@@ -189,7 +189,7 @@ export default function App() {
             <DashboardPage
               currentUser={currentUser}
               services={SERVICES}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               onSelectService={setSelectedService}
               favoriteServices={favoriteServices}
               onAddToFavorites={handleAddToFavorites}
@@ -202,7 +202,7 @@ export default function App() {
             <ServicesCatalogPage
               services={SERVICES}
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               onSelectService={setSelectedService}
               favoriteServices={favoriteServices}
               onAddToFavorites={handleAddToFavorites}
@@ -214,7 +214,7 @@ export default function App() {
           return (
             <ConsultationPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
           
@@ -222,7 +222,7 @@ export default function App() {
           return (
             <DocumentsPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
           
@@ -240,7 +240,7 @@ export default function App() {
             <ProfilePage
               currentUser={currentUser}
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -249,7 +249,7 @@ export default function App() {
             <EditProfilePage
               currentUser={currentUser}
               onBack={() => setViewMode("profile")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               onUpdateProfile={handleUpdateProfile}
             />
           );
@@ -259,7 +259,7 @@ export default function App() {
             <MenuPage
               currentUser={currentUser}
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               onLogout={() => setViewMode("login")}
               isDarkMode={isDarkMode}
               onToggleDarkMode={() => setIsDarkMode(!isDarkMode)}
@@ -271,7 +271,7 @@ export default function App() {
             <FavoritesPage
               favoriteServices={favoriteServices}
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               onSelectService={setSelectedService}
               onRemoveFromFavorites={handleRemoveFromFavorites}
             />
@@ -281,7 +281,7 @@ export default function App() {
           return (
             <ChatbotPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -289,7 +289,7 @@ export default function App() {
           return (
             <YangiliklarPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -297,7 +297,7 @@ export default function App() {
           return (
             <FAQPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -305,7 +305,7 @@ export default function App() {
           return (
             <JonliEfirPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -313,7 +313,7 @@ export default function App() {
           return (
             <SaylovlarPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -321,7 +321,7 @@ export default function App() {
           return (
             <TaklifBerishPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               onSetSuccessData={setSuccessPageData}
             />
           );
@@ -330,7 +330,7 @@ export default function App() {
           return (
             <QonunchilikPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -338,7 +338,7 @@ export default function App() {
           return (
             <SponsorsPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -346,7 +346,7 @@ export default function App() {
           return (
             <BildirishnomalarPage
               onBack={() => setViewMode("dashboard")}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
 
@@ -356,7 +356,7 @@ export default function App() {
               title={successPageData?.title}
               message={successPageData?.message}
               submessage={successPageData?.submessage}
-              onNavigate={setViewMode}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
               primaryAction={successPageData?.primaryAction}
               secondaryAction={successPageData?.secondaryAction}
             />
@@ -385,7 +385,7 @@ export default function App() {
       return pageContent();
     } else {
       return (
-        <AppLayout currentPage={viewMode} onNavigate={setViewMode}>
+        <AppLayout currentPage={viewMode} onNavigate={(v: string) => setViewMode(v as ViewMode)}>
           {pageContent()}
         </AppLayout>
       );
@@ -394,13 +394,8 @@ export default function App() {
 
   return (
     <LanguageProvider>
-      <div className={`min-h-screen flex items-center justify-center p-4 ${isDarkMode ? 'dark bg-gray-900' : 'bg-gray-100'}`}>
-        {/* iPhone Container */}
-        <div className={`w-[393px] h-[100vh] relative rounded-[40px] shadow-2xl  overflow-hidden ${isDarkMode ? 'bg-card border-gray-700' : 'bg-white border-black'}`}>
-          <div className="h-full overflow-auto">
-            {renderCurrentView()}
-          </div>
-        </div>
+      <div className={`min-h-screen bg-background ${isDarkMode ? 'dark text-foreground' : 'text-foreground'}`}>
+        {renderCurrentView()}
       </div>
     </LanguageProvider>
   );

@@ -1,7 +1,7 @@
 import { Button } from "./ui/button";
 import { useLanguage } from "./LanguageContext";
 import { ChevronLeft } from "lucide-react";
-import logoImage from "figma:asset/5cc4edff383c30532f088193ee5b23ec14628554.png";
+import logoImage from "../assets/5cc4edff383c30532f088193ee5b23ec14628554.png";
 
 interface OnboardingScreenProps {
   currentStep: number;
@@ -31,7 +31,7 @@ export function OnboardingScreen({ currentStep, onSkip, onNext, onPrevious }: On
   const currentData = onboardingData[currentStep];
 
   return (
-    <div className="h-full bg-gradient-to-b from-blue-500 to-blue-600 flex flex-col text-white">
+    <div className="min-h-screen bg-gradient-to-b from-blue-500 to-blue-600 flex flex-col text-white">
       {/* Header */}
       <div className="flex justify-end items-center pt-12 pb-6 px-6">
         <Button
