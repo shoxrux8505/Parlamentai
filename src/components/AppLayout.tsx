@@ -1,7 +1,7 @@
 import React from "react";
-import { 
+import {
   Home,
-  MessageSquare, 
+  MessageSquare,
   Calendar,
   User,
   Heart,
@@ -29,24 +29,23 @@ export function AppLayout({ children, currentPage, onNavigate }: AppLayoutProps)
       {/* Fixed Side Navigation (Desktop) */}
       <div className="hidden md:flex flex-col w-64 bg-card border-r border-border p-6 h-screen sticky top-0 shrink-0 z-10 shadow-sm">
         <div className="flex items-center space-x-3 mb-10 px-2 cursor-pointer" onClick={() => onNavigate("dashboard")}>
-           <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-teal-400 rounded-xl flex items-center justify-center shadow-md">
-             <span className="text-white font-bold text-xl">P</span>
-           </div>
-           <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-500">Parlament</span>
+          <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-teal-400 rounded-xl flex items-center justify-center shadow-md">
+            <span className="text-white font-bold text-xl">P</span>
+          </div>
+          <span className="text-2xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-teal-500">Parlament</span>
         </div>
-        
+
         <div className="flex flex-col space-y-2">
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
             return (
-              <button 
+              <button
                 key={item.id}
-                className={`flex items-center space-x-4 p-3.5 rounded-xl transition-all duration-200 ${
-                  isActive 
-                    ? "bg-primary text-primary-foreground shadow-md transform scale-[1.02]" 
+                className={`flex items-center space-x-4 p-3.5 rounded-xl transition-all duration-200 ${isActive
+                    ? "bg-primary text-primary-foreground shadow-md transform scale-[1.02]"
                     : "text-muted-foreground hover:bg-secondary hover:text-foreground"
-                }`}
+                  }`}
                 onClick={() => onNavigate(item.id)}
               >
                 <Icon className={`w-5 h-5 ${isActive ? "" : "opacity-80"}`} />
@@ -68,13 +67,12 @@ export function AppLayout({ children, currentPage, onNavigate }: AppLayoutProps)
           {navItems.map((item) => {
             const Icon = item.icon;
             const isActive = currentPage === item.id;
-            
+
             return (
-              <button 
+              <button
                 key={item.id}
-                className={`flex flex-col items-center space-y-1 transition-all duration-300 ${
-                  isActive ? "text-primary scale-110" : "text-muted-foreground"
-                }`}
+                className={`flex flex-col items-center space-y-1 transition-all duration-300 ${isActive ? "text-primary scale-110" : "text-muted-foreground"
+                  }`}
                 onClick={() => onNavigate(item.id)}
               >
                 <Icon className={`w-6 h-6 ${isActive ? "fill-primary/10" : ""}`} />

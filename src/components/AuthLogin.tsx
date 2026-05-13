@@ -42,6 +42,7 @@ export function AuthLogin() {
 
         {/* Title Section */}
         <div className="space-y-4">
+          <p style={{ color: "#f00" }}>Site test rejimida ishlamoqda</p>
           <h1 className="text-3xl font-semibold text-gray-900">
             Welcome to
             <br />

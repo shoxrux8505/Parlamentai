@@ -39,7 +39,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
   const t = (key: string): string => {
     const keys = key.split('.');
     let value: any = translations[language];
-    
+
     for (const k of keys) {
       if (value && typeof value === 'object') {
         value = value[k];
@@ -47,7 +47,7 @@ export const LanguageProvider: React.FC<LanguageProviderProps> = ({ children }) 
         return key; // Return key if translation not found
       }
     }
-    
+
     return typeof value === 'string' ? value : key;
   };
 

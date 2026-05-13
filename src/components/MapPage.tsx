@@ -1,20 +1,20 @@
 import { useState, useEffect, useMemo } from "react";
-import { 
-  MapContainer, 
-  TileLayer, 
-  Marker, 
-  Popup, 
-  Polyline, 
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
   useMap,
   ZoomControl
 } from "react-leaflet";
 import L from "leaflet";
 import { Button } from "./ui/button";
 import { Card } from "./ui/card";
-import { 
-  ArrowLeft, 
-  Search, 
-  Navigation, 
+import {
+  ArrowLeft,
+  Search,
+  Navigation,
   X,
   Compass
 } from "lucide-react";
@@ -134,9 +134,9 @@ export function MapPage({
           <Button variant="ghost" size="icon" onClick={onBack} className="bg-white shadow-xl rounded-2xl"><ArrowLeft /></Button>
           <div className="flex-1 relative">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 w-5 h-5" />
-            <input 
-              type="text" 
-              placeholder="Qidiruv..." 
+            <input
+              type="text"
+              placeholder="Qidiruv..."
               className="w-full h-12 pl-12 rounded-2xl bg-white shadow-xl border-none focus:ring-0 text-sm font-medium"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
@@ -160,15 +160,15 @@ export function MapPage({
           {userLocation && <Marker position={userLocation} icon={userIcon}><Popup>Siz shu yerdasiz</Popup></Marker>}
 
           {filteredLawyers.map(l => (
-            <Marker 
-              key={l.id} 
-              position={l.position} 
-              icon={createLawyerIcon(l.photo, l.online)} 
-              eventHandlers={{ 
-                click: () => { 
-                  setMapCenter(l.position); 
-                  getRoute(l.position); 
-                } 
+            <Marker
+              key={l.id}
+              position={l.position}
+              icon={createLawyerIcon(l.photo, l.online)}
+              eventHandlers={{
+                click: () => {
+                  setMapCenter(l.position);
+                  getRoute(l.position);
+                }
               }}
             >
               <Popup>
@@ -176,8 +176,8 @@ export function MapPage({
                   <img src={l.photo} className="w-12 h-12 rounded-full object-cover mb-2 border-2 border-blue-50" />
                   <div className="text-sm font-bold text-slate-900 mb-1">{l.name}</div>
                   <div className="text-[10px] text-slate-500 mb-3">{l.department}</div>
-                  <button 
-                    className="w-full h-9 text-[11px] bg-blue-600 text-white font-bold rounded-xl active:scale-95 transition-transform" 
+                  <button
+                    className="w-full h-9 text-[11px] bg-blue-600 text-white font-bold rounded-xl active:scale-95 transition-transform"
                     onClick={(e) => {
                       e.stopPropagation();
                       onSelectService(l);
@@ -205,7 +205,7 @@ export function MapPage({
                 <span className="text-xs font-bold text-slate-500">km</span>
               </div>
             </div>
-            
+
             <div className="flex-1 flex flex-col items-center">
               <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-1">Vaqt</span>
               <div className="flex items-baseline space-x-1">
@@ -214,7 +214,7 @@ export function MapPage({
               </div>
             </div>
 
-            <button 
+            <button
               onClick={() => setRouteData(null)}
               className="w-10 h-10 rounded-full bg-slate-50/80 flex items-center justify-center text-slate-400 hover:text-slate-600 transition-colors ml-2"
             >

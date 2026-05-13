@@ -29,7 +29,7 @@ import { AppLayout } from "./components/AppLayout";
 import { MapPage } from "./components/MapPage";
 import { LawyerDetailModal } from "./components/LawyerDetailModal";
 
-type ViewMode = 
+type ViewMode =
   | "onboarding"
   | "login"
   | "register"
@@ -93,7 +93,7 @@ export default function App() {
     },
     {
       id: 2,
-      name: "Bobur Toshmatov", 
+      name: "Bobur Toshmatov",
       photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
       department: "Biznes huquqi",
       rating: 4.8,
@@ -239,7 +239,7 @@ export default function App() {
   // Render current view
   const renderCurrentView = () => {
     const pagesWithoutNav = ["onboarding", "login", "register", "forgot-password", "service-booking", "edit-profile", "success", "chatbot"];
-    
+
     const pageContent = () => {
       switch (viewMode) {
         case "onboarding":
@@ -257,7 +257,7 @@ export default function App() {
               onPrevious={() => setOnboardingStep(Math.max(0, onboardingStep - 1))}
             />
           );
-          
+
         case "login":
           return (
             <LoginScreen
@@ -267,7 +267,7 @@ export default function App() {
               onForgotPassword={() => setViewMode("forgot-password")}
             />
           );
-          
+
         case "register":
           return (
             <RegistrationScreen
@@ -276,7 +276,7 @@ export default function App() {
               onLogin={() => setViewMode("login")}
             />
           );
-          
+
         case "forgot-password":
           return (
             <ForgotPasswordScreen
@@ -284,7 +284,7 @@ export default function App() {
               onResetSent={() => setViewMode("login")}
             />
           );
-          
+
         case "dashboard":
           return (
             <DashboardPage
@@ -297,7 +297,7 @@ export default function App() {
               onRemoveFromFavorites={handleRemoveFromFavorites}
             />
           );
-          
+
         case "services":
           return (
             <ServicesCatalogPage
@@ -310,7 +310,7 @@ export default function App() {
               onRemoveFromFavorites={handleRemoveFromFavorites}
             />
           );
-          
+
         case "consultation":
           return (
             <ConsultationPage
@@ -318,7 +318,7 @@ export default function App() {
               onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
-          
+
         case "documents":
           return (
             <DocumentsPage
@@ -326,7 +326,7 @@ export default function App() {
               onNavigate={(v: string) => setViewMode(v as ViewMode)}
             />
           );
-          
+
         case "service-booking":
           return (
             <ServiceBookingPage
@@ -335,7 +335,7 @@ export default function App() {
               onConfirmBooking={handleServiceBooking}
             />
           );
-          
+
         case "profile":
           return (
             <ProfilePage
@@ -354,7 +354,7 @@ export default function App() {
               onUpdateProfile={handleUpdateProfile}
             />
           );
-          
+
         case "menu":
           return (
             <MenuPage
@@ -472,7 +472,7 @@ export default function App() {
               secondaryAction={successPageData?.secondaryAction}
             />
           );
-          
+
         default:
           return (
             <OnboardingScreen
@@ -506,7 +506,14 @@ export default function App() {
     <LanguageProvider>
       <div className={`min-h-screen bg-background ${isDarkMode ? 'dark text-foreground' : 'text-foreground'}`}>
         {renderCurrentView()}
-        
+
+        {/* Persistent Developer Mode Indicator */}
+        <div className="fixed top-2 right-4 z-[200001] pointer-events-none">
+          <div className="bg-blue-600/10 backdrop-blur-md border border-blue-500/20 px-3 py-1 rounded-lg flex items-center space-x-2">
+            <code className="text-[9px] font-mono font-bold text-blue-600 uppercase tracking-wider">dev_mode: active</code>
+          </div>
+        </div>
+
         <LawyerDetailModal
           lawyer={selectedService}
           isOpen={!!selectedService && viewMode !== "service-booking"}
