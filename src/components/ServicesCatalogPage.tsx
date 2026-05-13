@@ -10,8 +10,16 @@ import {
   Star, 
   Heart,
   Clock,
-  CheckCircle
+  CheckCircle,
+  X,
+  Phone,
+  Mail,
+  Share2,
+  ShieldCheck,
+  MessageCircle
 } from "lucide-react";
+import { toast } from "sonner";
+import { LawyerDetailModal } from "./LawyerDetailModal";
 
 interface ServicesCatalogPageProps {
   services: any[];
@@ -34,6 +42,7 @@ export function ServicesCatalogPage({
 }: ServicesCatalogPageProps) {
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("Barchasi");
+  const [selectedLawyer, setSelectedLawyer] = useState<any>(null);
 
   const categories = [
     "Barchasi", 
@@ -44,7 +53,6 @@ export function ServicesCatalogPage({
     "Biznes huquqi"
   ];
 
-  // Mock lawyers data since we're adapting to government services
   const lawyers = [
     {
       id: 1,
@@ -55,6 +63,9 @@ export function ServicesCatalogPage({
       experience: "8 yil",
       availability: "Mavjud",
       online: true,
+      phone: "+998 90 123 45 67",
+      email: "a.karimova@law.uz",
+      type: "Professional",
       description: "Oila nizolari, ajralish va bola huquqlari bo'yicha mutaxassis"
     },
     {
@@ -66,6 +77,9 @@ export function ServicesCatalogPage({
       experience: "12 yil",
       availability: "Band",
       online: false,
+      phone: "+998 91 234 56 78",
+      email: "b.toshmatov@law.uz",
+      type: "Senior Expert",
       description: "Korporativ huquq va biznes shartnomalar bo'yicha ekspert"
     },
     {
@@ -77,6 +91,9 @@ export function ServicesCatalogPage({
       experience: "6 yil",
       availability: "Mavjud",
       online: true,
+      phone: "+998 93 345 67 89",
+      email: "n.rahimova@law.uz",
+      type: "Legal Consultant",
       description: "Ko'chmas mulk va meros masalalari bo'yicha maslahatchi"
     },
     {
@@ -88,6 +105,9 @@ export function ServicesCatalogPage({
       experience: "10 yil",
       availability: "Mavjud",
       online: true,
+      phone: "+998 94 456 78 90",
+      email: "r.yusupov@law.uz",
+      type: "Professional",
       description: "Mehnat nizolari va xodimlar huquqlari bo'yicha yurist"
     },
     {
@@ -99,6 +119,9 @@ export function ServicesCatalogPage({
       experience: "15 yil", 
       availability: "Mavjud",
       online: true,
+      phone: "+998 97 567 89 01",
+      email: "m.nazarov@law.uz",
+      type: "Defense Attorney",
       description: "Jinoiy ishlar va sud jarayonlari bo'yicha tajribali yurist"
     }
   ];
@@ -122,8 +145,20 @@ export function ServicesCatalogPage({
     }
   };
 
+  const handleShare = (lawyer: any) => {
+    if (navigator.share) {
+      navigator.share({
+        title: lawyer.name,
+        text: `${lawyer.name} - ${lawyer.department} mutaxassisi`,
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      toast.success("Profil havolasi nusxalandi!");
+    }
+  };
+
   return (
-    <div className="bg-gray-50 dark:bg-black">
+    <div className="bg-gray-50 dark:bg-black min-h-screen">
       {/* Header with Gradient */}
       <div className="bg-gradient-to-r from-blue-500 to-teal-400 dark:from-[#2c3e50] dark:to-[#1a1a1a] px-6 pt-12 pb-6">
         <div className="flex items-center justify-between mb-6">
@@ -160,7 +195,7 @@ export function ServicesCatalogPage({
 
       {/* Categories */}
       <div className="px-6 py-4">
-        <div className="flex space-x-3 overflow-x-auto pb-2">
+        <div className="flex space-x-3 overflow-x-auto pb-2 no-scrollbar">
           {categories.map((category) => (
             <Button
               key={category}
@@ -187,37 +222,44 @@ export function ServicesCatalogPage({
       </div>
 
       {/* Lawyers List */}
-      <div className="px-6 pb-6">
-        <div className="space-y-3">
+      <div className="px-6 pb-20">
+        <div className="space-y-4">
           {filteredLawyers.map((lawyer) => (
-            <Card key={lawyer.id} className="bg-white dark:bg-gray-800 rounded-2xl border-0 shadow-sm">
-              <CardContent className="p-4">
+            <Card 
+              key={lawyer.id} 
+              className="bg-white dark:bg-gray-800 rounded-3xl border-0 shadow-sm cursor-pointer hover:shadow-md transition-all active:scale-[0.98]"
+              onClick={() => setSelectedLawyer(lawyer)}
+            >
+              <CardContent className="p-5">
                 <div className="flex items-start space-x-4">
                   <div className="relative">
-                    <div className="w-16 h-16 bg-gray-100 dark:bg-gray-700 rounded-2xl overflow-hidden">
+                    <div className="w-20 h-20 bg-gray-100 dark:bg-gray-700 rounded-[1.8rem] overflow-hidden shadow-inner">
                       <img 
                         src={lawyer.photo} 
                         alt={lawyer.name}
                         className="w-full h-full object-cover"
                       />
                     </div>
-                    <div className={`absolute -bottom-1 -right-1 w-4 h-4 border-2 border-white rounded-full ${
+                    <div className={`absolute -bottom-1 -right-1 w-5 h-5 border-4 border-white dark:border-gray-800 rounded-full ${
                       lawyer.online ? "bg-green-500" : "bg-orange-500"
                     }`}></div>
                   </div>
                   <div className="flex-1 min-w-0">
                     <div className="flex items-start justify-between mb-2">
                       <div>
-                        <h4 className="font-medium text-gray-900 dark:text-white mb-1">
+                        <h4 className="font-bold text-gray-900 dark:text-white text-lg mb-0.5">
                           {lawyer.name}
                         </h4>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">{lawyer.department}</p>
+                        <p className="text-xs font-semibold text-blue-600 uppercase tracking-wider">{lawyer.department}</p>
                       </div>
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => handleFavoriteToggle(lawyer)}
-                        className="p-1 h-auto"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          handleFavoriteToggle(lawyer);
+                        }}
+                        className="p-2 h-auto rounded-xl hover:bg-red-50 dark:hover:bg-red-900/20"
                       >
                         <Heart 
                           className={`w-5 h-5 ${
@@ -229,46 +271,28 @@ export function ServicesCatalogPage({
                       </Button>
                     </div>
 
-                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                      {lawyer.description}
-                    </p>
-
                     <div className="flex items-center space-x-4 mb-3">
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                        <span className="text-sm font-medium ml-1">{lawyer.rating}</span>
+                      <div className="flex items-center bg-yellow-50 dark:bg-yellow-900/20 px-2 py-1 rounded-lg">
+                        <Star className="w-3.5 h-3.5 text-yellow-400 fill-current mr-1" />
+                        <span className="text-xs font-bold text-yellow-700 dark:text-yellow-500">{lawyer.rating}</span>
                       </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 text-gray-400 mr-1" />
-                        <span className="text-sm text-gray-600 dark:text-gray-400">{lawyer.experience}</span>
-                      </div>
-                      <div className="flex items-center">
-                        {lawyer.online ? (
-                          <CheckCircle className="w-4 h-4 text-green-500" />
-                        ) : (
-                          <Clock className="w-4 h-4 text-orange-500" />
-                        )}
-                        <span className="text-sm ml-1 text-gray-600 dark:text-gray-400">
-                          {lawyer.availability}
-                        </span>
+                      <div className="flex items-center text-gray-500 dark:text-gray-400">
+                        <Clock className="w-3.5 h-3.5 mr-1" />
+                        <span className="text-xs font-medium">{lawyer.experience}</span>
                       </div>
                     </div>
 
                     <div className="flex space-x-2">
                       <Button
-                        variant="outline"
+                        variant="secondary"
                         size="sm"
-                        className="flex-1 h-9 rounded-xl border-gray-200 dark:border-gray-600 text-gray-700 dark:text-gray-300"
+                        className="flex-1 h-10 rounded-xl bg-gray-50 dark:bg-gray-700 text-gray-900 dark:text-white font-bold text-xs"
                       >
                         Batafsil
                       </Button>
                       <Button
-                        onClick={() => {
-                          onSelectService(lawyer);
-                          onNavigate("service-booking");
-                        }}
                         size="sm"
-                        className="flex-1 h-9 bg-blue-600 hover:bg-blue-700 text-white rounded-xl"
+                        className="flex-1 h-10 bg-blue-600 hover:bg-blue-700 text-white rounded-xl font-bold text-xs shadow-lg shadow-blue-500/20"
                       >
                         Yozilish
                       </Button>
@@ -279,17 +303,20 @@ export function ServicesCatalogPage({
             </Card>
           ))}
         </div>
-
-        {filteredLawyers.length === 0 && (
-          <div className="text-center py-12">
-            <div className="w-16 h-16 bg-gray-100 dark:bg-gray-800 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-gray-400 dark:text-gray-500" />
-            </div>
-            <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">Yurist topilmadi</h3>
-            <p className="text-gray-600 dark:text-gray-400">Qidiruv so'zini o'zgartirib ko'ring</p>
-          </div>
-        )}
       </div>
+
+      {/* Lawyer Detail Modal */}
+      <LawyerDetailModal
+        lawyer={selectedLawyer}
+        isOpen={!!selectedLawyer}
+        onClose={() => setSelectedLawyer(null)}
+        isFavorite={selectedLawyer ? favoriteServices.some(s => s.id === selectedLawyer.id) : false}
+        onToggleFavorite={handleFavoriteToggle}
+        onBook={(l) => {
+          onSelectService(l);
+          onNavigate("service-booking");
+        }}
+      />
     </div>
   );
 }

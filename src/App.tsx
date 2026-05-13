@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import "leaflet/dist/leaflet.css";
 import { toast } from "sonner";
 import { LanguageProvider } from "./components/LanguageContext";
 import { OnboardingScreen } from "./components/OnboardingScreen";
@@ -23,8 +24,10 @@ import { TaklifBerishPage } from "./components/TaklifBerishPage";
 import { QonunchilikPage } from "./components/QonunchilikPage";
 import { SuccessPage } from "./components/SuccessPage";
 import { SponsorsPage } from "./components/SponsorsPage";
-import { AppLayout } from "./components/AppLayout";
 import { BildirishnomalarPage } from "./components/BildirishnomalarPage";
+import { AppLayout } from "./components/AppLayout";
+import { MapPage } from "./components/MapPage";
+import { LawyerDetailModal } from "./components/LawyerDetailModal";
 
 type ViewMode = 
   | "onboarding"
@@ -49,6 +52,7 @@ type ViewMode =
   | "qonunchilik"
   | "sponsors"
   | "bildirishnomalar"
+  | "map"
   | "success";
 
 export default function App() {
@@ -75,47 +79,145 @@ export default function App() {
   const SERVICES = [
     {
       id: 1,
-      name: "Legislative Drafting",
-      photo: "https://images.unsplash.com/photo-1450101499163-c8848c66ca85?w=150&h=150&fit=crop",
-      department: "Legal Affairs",
+      name: "Aliya Karimova",
+      photo: "https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=150&h=150&fit=crop",
+      department: "Oila huquqi",
       rating: 4.9,
-      availability: "Available",
+      experience: "8 yil",
+      availability: "Mavjud",
       online: true,
-      description: "Professional assistance with drafting bills and legislative proposals"
+      phone: "+998 90 123 45 67",
+      email: "a.karimova@law.uz",
+      type: "Professional",
+      description: "Oila nizolari, ajralish va bola huquqlari bo'yicha mutaxassis"
     },
     {
       id: 2,
-      name: "Committee Support", 
-      photo: "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=150&h=150&fit=crop",
-      department: "Parliamentary Procedure",
+      name: "Bobur Toshmatov", 
+      photo: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop",
+      department: "Biznes huquqi",
       rating: 4.8,
-      availability: "Busy",
+      experience: "12 yil",
+      availability: "Band",
       online: false,
-      description: "Administrative and procedural support for parliamentary committees"
+      phone: "+998 91 234 56 78",
+      email: "b.toshmatov@law.uz",
+      type: "Senior Expert",
+      description: "Korporativ huquq va biznes shartnomalar bo'yicha ekspert"
     },
     {
       id: 3,
-      name: "Constituency Services",
-      photo: "https://images.unsplash.com/photo-1556157382-97eda2d62296?w=150&h=150&fit=crop",
-      department: "Public Relations",
+      name: "Nigora Rahimova",
+      photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop",
+      department: "Mulk huquqi",
       rating: 4.7,
-      availability: "Available", 
+      experience: "6 yil",
+      availability: "Mavjud",
       online: true,
-      description: "Support for managing constituent inquiries and community outreach"
+      phone: "+998 93 345 67 89",
+      email: "n.rahimova@law.uz",
+      type: "Legal Consultant",
+      description: "Ko'chmas mulk va meros masalalari bo'yicha maslahatchi"
     },
     {
       id: 4,
-      name: "Policy Research",
-      photo: "https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=150&h=150&fit=crop",
-      department: "Research Division",
-      rating: 4.9,
-      availability: "Available",
+      name: "Ruslan Yusupov",
+      photo: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=150&h=150&fit=crop",
+      department: "Mehnat huquqi",
+      rating: 4.6,
+      experience: "10 yil",
+      availability: "Mavjud",
       online: true,
-      description: "Comprehensive research support for policy development and analysis"
+      phone: "+998 94 456 78 90",
+      email: "r.yusupov@law.uz",
+      type: "Professional",
+      description: "Mehnat nizolari va xodimlar huquqlari bo'yicha yurist"
+    },
+    {
+      id: 5,
+      name: "Murod Nazarov",
+      photo: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=150&h=150&fit=crop",
+      department: "Jinoyat huquqi",
+      rating: 4.9,
+      experience: "15 yil",
+      availability: "Mavjud",
+      online: true,
+      phone: "+998 97 555 00 11",
+      email: "m.nazarov@law.uz",
+      type: "Senior Partner",
+      description: "Jinoyat ishlari bo'yicha yuqori malakali advokat"
+    },
+    {
+      id: 6,
+      name: "Dilnoza Ahmedova",
+      photo: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=150&h=150&fit=crop",
+      department: "Oila huquqi",
+      rating: 4.8,
+      experience: "7 yil",
+      availability: "Mavjud",
+      online: true,
+      phone: "+998 99 888 77 66",
+      email: "d.ahmedova@law.uz",
+      type: "Professional",
+      description: "Nikoh shartnomalari va mulk taqsimoti mutaxassisi"
+    },
+    {
+      id: 7,
+      name: "Sardor Ikromov",
+      photo: "https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=150&h=150&fit=crop",
+      department: "Biznes huquqi",
+      rating: 4.7,
+      experience: "9 yil",
+      availability: "Band",
+      online: false,
+      phone: "+998 90 444 33 22",
+      email: "s.ikromov@law.uz",
+      type: "Expert",
+      description: "Startaplar va investitsiya huquqi bo'yicha maslahatchi"
+    },
+    {
+      id: 8,
+      name: "Malika Soyipova",
+      photo: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop",
+      department: "Intellektual mulk",
+      rating: 4.9,
+      experience: "11 yil",
+      availability: "Mavjud",
+      online: true,
+      phone: "+998 91 777 55 44",
+      email: "m.soyipova@law.uz",
+      type: "Senior Expert",
+      description: "Mualliflik huquqi va patentlar bo'yicha ekspert"
+    },
+    {
+      id: 9,
+      name: "Javohir Qosimov",
+      photo: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?w=150&h=150&fit=crop",
+      department: "Soliq huquqi",
+      rating: 4.6,
+      experience: "13 yil",
+      availability: "Mavjud",
+      online: true,
+      phone: "+998 93 111 22 33",
+      email: "j.qosimov@law.uz",
+      type: "Professional",
+      description: "Soliq auditi va optimallashtirish bo'yicha mutaxassis"
+    },
+    {
+      id: 10,
+      name: "Guli Mansurova",
+      photo: "https://images.unsplash.com/photo-1554151228-14d9def656e4?w=150&h=150&fit=crop",
+      department: "Tibbiyot huquqi",
+      rating: 4.8,
+      experience: "8 yil",
+      availability: "Mavjud",
+      online: true,
+      phone: "+998 94 999 00 88",
+      email: "g.mansurova@law.uz",
+      type: "Legal Consultant",
+      description: "Tibbiy xatolar va sug'urta nizolari mutaxassisi"
     }
   ];
-
-
 
   const handleServiceBooking = (service: any, dateTime: string) => {
     toast.success(`Your ${service.name} appointment is scheduled for ${dateTime}!`);
@@ -136,7 +238,6 @@ export default function App() {
 
   // Render current view
   const renderCurrentView = () => {
-    // Pages that don't need the bottom navigation (onboarding, login, register, forgot-password, service booking, edit profile, success, chatbot)
     const pagesWithoutNav = ["onboarding", "login", "register", "forgot-password", "service-booking", "edit-profile", "success", "chatbot"];
     
     const pageContent = () => {
@@ -350,6 +451,16 @@ export default function App() {
             />
           );
 
+        case "map":
+          return (
+            <MapPage
+              services={SERVICES}
+              onBack={() => setViewMode("dashboard")}
+              onNavigate={(v: string) => setViewMode(v as ViewMode)}
+              onSelectService={setSelectedService}
+            />
+          );
+
         case "success":
           return (
             <SuccessPage
@@ -380,7 +491,6 @@ export default function App() {
       }
     };
 
-    // Wrap with AppLayout if it's a main app page
     if (pagesWithoutNav.includes(viewMode)) {
       return pageContent();
     } else {
@@ -396,6 +506,20 @@ export default function App() {
     <LanguageProvider>
       <div className={`min-h-screen bg-background ${isDarkMode ? 'dark text-foreground' : 'text-foreground'}`}>
         {renderCurrentView()}
+        
+        <LawyerDetailModal
+          lawyer={selectedService}
+          isOpen={!!selectedService && viewMode !== "service-booking"}
+          onClose={() => setSelectedService(null)}
+          isFavorite={selectedService ? favoriteServices.find(s => s.id === selectedService.id) : false}
+          onToggleFavorite={(s) => {
+            if (favoriteServices.find(f => f.id === s.id)) handleRemoveFromFavorites(s.id);
+            else handleAddToFavorites(s);
+          }}
+          onBook={(s) => {
+            setViewMode("service-booking");
+          }}
+        />
       </div>
     </LanguageProvider>
   );

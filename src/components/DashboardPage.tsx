@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button } from "./ui/button";
 import { Card, CardContent } from "./ui/card";
 import { Badge } from "./ui/badge";
@@ -18,8 +19,16 @@ import {
   User,
   Scale,
   Home,
-  Bot
+  Bot,
+  X,
+  Phone,
+  Mail,
+  Share2,
+  ShieldCheck,
+  MessageCircle
 } from "lucide-react";
+import { toast } from "sonner";
+import { LawyerDetailModal } from "./LawyerDetailModal";
 import parlamentLogo from "../assets/c998fc552b7b40f39fda694ac3c0aad18cb7b674.png";
 
 interface DashboardPageProps {
@@ -41,6 +50,7 @@ export function DashboardPage({
   onAddToFavorites,
   onRemoveFromFavorites
 }: DashboardPageProps) {
+  const [selectedLawyer, setSelectedLawyer] = useState<any>(null);
   
   const isFavorite = (serviceId: number) => {
     return favoriteServices.some(s => s.id === serviceId);
@@ -54,6 +64,18 @@ export function DashboardPage({
     }
   };
 
+  const handleShare = (lawyer: any) => {
+    if (navigator.share) {
+      navigator.share({
+        title: lawyer.name,
+        text: `${lawyer.name} - ${lawyer.department} mutaxassisi`,
+        url: window.location.href,
+      }).catch(console.error);
+    } else {
+      toast.success("Profil havolasi nusxalandi!");
+    }
+  };
+
   return (
     <div className="bg-background min-h-full pb-8">
       <div className="max-w-7xl mx-auto w-full">
@@ -63,7 +85,15 @@ export function DashboardPage({
             <div className="flex items-center">
               <img src={parlamentLogo} alt="Parlament AI" className="h-10 object-contain" />
             </div>
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-3">
+              <Button
+                variant="ghost"
+                size="icon"
+                onClick={() => onNavigate("favorites")}
+                className="w-10 h-10 text-white hover:bg-white/10 rounded-lg flex items-center justify-center transition-colors"
+              >
+                <Heart className="w-5 h-5" />
+              </Button>
               <NotificationDropdown className="w-10 h-10 text-white hover:bg-white/10 rounded-lg flex items-center justify-center cursor-pointer transition-colors" />
               <Button
                 variant="ghost"
@@ -176,129 +206,70 @@ export function DashboardPage({
           </div>
 
           <div className="space-y-4 md:space-y-0 md:grid md:grid-cols-2 lg:grid-cols-3 md:gap-6 pb-6">
-            <Card className="bg-card rounded-3xl shadow-sm">
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-4">
-                  <div className="relative">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src="https://images.unsplash.com/photo-1494790108755-2616b612b47c?w=80&h=80&fit=crop&crop=face" />
-                      <AvatarFallback>AK</AvatarFallback>
-                    </Avatar>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-card rounded-full"></div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-1">
-                      <div>
-                        <h4 className="font-semibold text-foreground">Aliya Karimova</h4>
-                        <p className="text-sm text-muted-foreground">Oila huquqi</p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleFavoriteToggle({id: 999, name: "Aliya Karimova"})}
-                        className="p-1 h-auto"
-                      >
-                        <Heart className="w-4 h-4 text-muted-foreground" />
-                      </Button>
+            {services.slice(0, 3).map((lawyer, index) => (
+              <Card 
+                key={lawyer.id}
+                className="bg-card rounded-3xl shadow-sm cursor-pointer hover:bg-secondary transition-colors"
+                onClick={() => setSelectedLawyer(lawyer)}
+              >
+                <CardContent className="p-4">
+                  <div className="flex items-start space-x-4">
+                    <div className="relative">
+                      <Avatar className="w-12 h-12">
+                        <AvatarImage src={lawyer.photo} />
+                        <AvatarFallback>{lawyer.name.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className={`absolute -bottom-1 -right-1 w-4 h-4 border-2 border-card rounded-full ${lawyer.online ? 'bg-green-500' : 'bg-orange-500'}`}></div>
                     </div>
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                        <span>4.6 (127)</span>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-start justify-between mb-1">
+                        <div>
+                          <h4 className="font-semibold text-foreground">{lawyer.name}</h4>
+                          <p className="text-xs text-muted-foreground">{lawyer.department}</p>
+                        </div>
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleFavoriteToggle(lawyer);
+                          }}
+                          className="p-1 h-auto"
+                        >
+                          <Heart className={`w-4 h-4 ${isFavorite(lawyer.id) ? 'fill-red-500 text-red-500' : 'text-muted-foreground'}`} />
+                        </Button>
                       </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        <span>8 yil</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {/* Add more lawyer cards for scrolling demonstration */}
-            <Card className="bg-card rounded-3xl shadow-sm">
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-4">
-                  <div className="relative">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=80&h=80&fit=crop&crop=face" />
-                      <AvatarFallback>BT</AvatarFallback>
-                    </Avatar>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-yellow-500 border-2 border-card rounded-full"></div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-1">
-                      <div>
-                        <h4 className="font-semibold text-foreground">Bobur Toshmatov</h4>
-                        <p className="text-sm text-muted-foreground">Biznes huquqi</p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleFavoriteToggle({id: 998, name: "Bobur Toshmatov"})}
-                        className="p-1 h-auto"
-                      >
-                        <Heart className="w-4 h-4 text-muted-foreground" />
-                      </Button>
-                    </div>
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                        <span>4.8 (203)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        <span>12 yil</span>
+                      <div className="flex items-center space-x-4 text-sm text-muted-foreground">
+                        <div className="flex items-center">
+                          <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
+                          <span>{lawyer.rating}</span>
+                        </div>
+                        <div className="flex items-center">
+                          <Clock className="w-4 h-4 mr-1" />
+                          <span>{lawyer.experience}</span>
+                        </div>
                       </div>
                     </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-card rounded-3xl shadow-sm">
-              <CardContent className="p-4">
-                <div className="flex items-start space-x-4">
-                  <div className="relative">
-                    <Avatar className="w-12 h-12">
-                      <AvatarImage src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&h=80&fit=crop&crop=face" />
-                      <AvatarFallback>MN</AvatarFallback>
-                    </Avatar>
-                    <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-green-500 border-2 border-card rounded-full"></div>
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-start justify-between mb-1">
-                      <div>
-                        <h4 className="font-semibold text-foreground">Murod Nazarov</h4>
-                        <p className="text-sm text-muted-foreground">Jinoiy huquq</p>
-                      </div>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => handleFavoriteToggle({id: 997, name: "Murod Nazarov"})}
-                        className="p-1 h-auto"
-                      >
-                        <Heart className="w-4 h-4 text-muted-foreground" />
-                      </Button>
-                    </div>
-                    <div className="flex items-center space-x-4 text-sm text-muted-foreground">
-                      <div className="flex items-center">
-                        <Star className="w-4 h-4 text-yellow-400 fill-current mr-1" />
-                        <span>4.9 (156)</span>
-                      </div>
-                      <div className="flex items-center">
-                        <Clock className="w-4 h-4 mr-1" />
-                        <span>15 yil</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            ))}
           </div>
         </div>
       </div>
+
+      {/* Lawyer Detail Modal */}
+      <LawyerDetailModal
+        lawyer={selectedLawyer}
+        isOpen={!!selectedLawyer}
+        onClose={() => setSelectedLawyer(null)}
+        isFavorite={selectedLawyer ? favoriteServices.some(s => s.id === selectedLawyer.id) : false}
+        onToggleFavorite={handleFavoriteToggle}
+        onBook={(l) => {
+          onSelectService(l);
+          onNavigate("service-booking");
+        }}
+      />
     </div>
   );
 }
